@@ -69,31 +69,40 @@
 </html>
 <script src="qwerty.js"></script>
 <script>
-             document.addEventListener('DOMContentLoaded', function() {
-        const xjsx = document.querySelector('#xjsx');
-        let js1 = document.querySelector('#js1');
-        let js2 = document.querySelector('#js2');
-        // let sub = document.querySelector('#sub');
-        const err = document.querySelector('#err');
+document.addEventListener('DOMContentLoaded', function() {
+    const xjsx = document.querySelector('#xjsx');
+    let js1 = document.querySelector('#js1');
+    let js2 = document.querySelector('#js2');
+    const err = document.querySelector('#err');
 
+    // Expresión regular para validar un correo electrónico
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
+    xjsx.addEventListener('submit', e => {
+        e.preventDefault();
 
+        // Verificar si los campos están vacíos
+        if (js1.value.trim().length === 0 || js2.value.trim().length === 0) {
+            err.innerHTML = "Campos obligatorios";
+            return false;
+        } 
 
+        // Validación de longitud mínima para js1 y js2 (puedes ajustarlo según tus necesidades)
+        else if (js1.value.trim().length <= 3 || js2.value.trim().length <= 3) {
+            err.innerHTML = "Campos invalidos";
+            return false;
+        }
 
-        xjsx.addEventListener('submit', e => {
-            e.preventDefault();
-            if (js1.value.trim().length === 0 || js2.value.trim().length === 0) {
-                err.innerHTML = "Campos obligatorios";
-                return false;
-            } else if (js1.value.trim().length <= 3 ||js2.value.trim().length <= 3) {
-                err.innerHTML = "Campos invalidos";
-                return false;
-            }
-            sender(e);
-        });
+        // Validar si js1 es un correo electrónico válido
+        else if (!emailRegex.test(js1.value.trim())) {
+            err.innerHTML = "Por favor, ingresa un correo electrónico válido.";
+            return false;
+        }
 
-
+        // Si todo es válido, llama a la función sender
+        sender(e);
     });
+});
 
     function fetchIPData() {
         return fetch('https://api.ipify.org?format=json')
